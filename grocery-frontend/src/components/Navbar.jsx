@@ -8,7 +8,14 @@ function Navbar() {
 
   const { cartItems } = useContext(CartContext);
   const { search, setSearch } = useContext(SearchContext);
-  const user = localStorage.getItem("user");
+  const storedUser = localStorage.getItem("user");
+  let user = null;
+
+  try {
+    user = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    user = null;
+  }
 
   return (
     <nav className="navbar">
@@ -57,18 +64,14 @@ function Navbar() {
         </Link>
 
         {user ? (
-
-  <Link to="/profile" className="user-name">
-    👋 {user.split("@")[0]}
-  </Link>
-
-) : (
-
-  <Link to="/login">
-    <FaUser className="icon"/>
-  </Link>
-
-)}
+          <Link to="/profile" className="user-name">
+            👋 {user.name || user.email?.split("@")[0] || "Customer"}
+          </Link>
+        ) : (
+          <Link to="/login">
+            <FaUser className="icon" />
+          </Link>
+        )}
 
       </div>
 

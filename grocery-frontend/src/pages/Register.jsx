@@ -10,11 +10,11 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [user, setUser] = useState({
-    name: "Priyanka",
-    email: "priya@gmail.com",
-    password: "123456",
-    phone: "9703545886",
-    address: "hyderabad",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
     role: "CUSTOMER"
   });
 
@@ -50,11 +50,14 @@ function Register() {
       navigate("/login");
 
     } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.response?.data?.timestamp ||
+        "Registration Failed!";
 
-      alert("Registration Failed!");
-
+      alert(message);
       console.log(error);
-
     }
 
   };

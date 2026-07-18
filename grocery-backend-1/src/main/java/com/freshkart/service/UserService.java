@@ -3,7 +3,9 @@ package com.freshkart.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.freshkart.entity.User;
 import com.freshkart.repository.UserRepository;
@@ -20,7 +22,7 @@ public class UserService {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()) {
-            throw new RuntimeException("Email already exists!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
 
         return userRepository.save(user);
@@ -31,13 +33,14 @@ public class UserService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        if (user.isPresent()) {
-
-            if (user.get().getPassword().equals(password)) {
-                return user.get();
-            }
+        if (user.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
-        return null;
+        if (!user.get().getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+
+        return user.get();
     }
 }

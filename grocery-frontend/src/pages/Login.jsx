@@ -51,11 +51,13 @@ function Login() {
       }
 
     } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Invalid Email or Password";
 
-      alert("Invalid Email or Password");
-
+      alert(message);
       console.log(error);
-
     }
 
   };

@@ -8,7 +8,7 @@ import com.freshkart.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5179")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired

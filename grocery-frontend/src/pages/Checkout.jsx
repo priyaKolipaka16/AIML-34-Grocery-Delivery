@@ -3,8 +3,47 @@ import { useNavigate } from "react-router-dom";
 
 function Checkout() {
   const [payment, setPayment] = useState("COD");
+  const [customerName, setCustomerName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [address, setAddress] = useState("");
+  const [pincode, setPincode] = useState("");
   const navigate = useNavigate();
-  
+
+  const handlePlaceOrder = () => {
+    if (
+      customerName.trim() === "" ||
+      mobile.trim() === "" ||
+      address.trim() === "" ||
+      pincode.trim() === ""
+    ) {
+      alert("Please fill all delivery details.");
+      return;
+    }
+
+    const orderTime = new Date();
+    const expectedDeliveryTime = new Date(orderTime.getTime() + 15 * 60 * 1000);
+    const currentOrder = {
+      id: `ORD-${Math.floor(Math.random() * 900000 + 100000)}`,
+      customerName,
+      mobile,
+      deliveryAddress: `${address}, ${pincode}`,
+      paymentMethod: payment,
+      orderTime: orderTime.toISOString(),
+      expectedDeliveryTime: expectedDeliveryTime.toISOString(),
+      status: "Out for Delivery",
+      deliveryPartner: {
+        name: "Rohit Kumar",
+        rating: 4.9,
+        phone: "+91 98765 43210",
+        vehicle: "Royal Enfield Classic",
+        location: "Near City Mall, Hyderabad"
+      },
+      deliveryPlace: "Hyderabad, Telangana"
+    };
+
+    localStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+    navigate("/success");
+  };
 
   return (
     <div className="checkout-page">
@@ -17,13 +56,32 @@ function Checkout() {
 
           <h2>Delivery Address</h2>
 
-          <input type="text" placeholder="Full Name" />
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+          />
 
-          <input type="text" placeholder="Mobile Number" />
+          <input
+            type="text"
+            placeholder="Mobile Number"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+          />
 
-          <textarea placeholder="House No, Street, City"></textarea>
+          <textarea
+            placeholder="House No, Street, City"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          ></textarea>
 
-          <input type="text" placeholder="Pincode" />
+          <input
+            type="text"
+            placeholder="Pincode"
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value)}
+          />
 
         </div>
 
@@ -82,19 +140,19 @@ function Checkout() {
     🏦 Net Banking
   </label>
 
-  <button
-    className="place-order"
-    onClick={() => navigate("/success")}
-  >
-    Place Order
-  </button>
-  <p style={{
-    marginTop: "20px",
-    color: "#16a34a",
-    fontWeight: "bold"
-  }}>
-  Selected Payment : {payment}
-</p>
+          <button
+            className="place-order"
+            onClick={handlePlaceOrder}
+          >
+            Place Order
+          </button>
+          <p style={{
+            marginTop: "20px",
+            color: "#16a34a",
+            fontWeight: "bold"
+          }}>
+            Selected Payment : {payment}
+          </p>
 
 </div>
 
